@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Request, Response, status
 from users.models.user import User
-from config.database import db
 from users.utils.password import get_password_hash, verify_password
 from users.utils.user import find_user, add_user
 from users.utils.token import get_access_token, decode_access_token
+
 
 router = APIRouter()
 

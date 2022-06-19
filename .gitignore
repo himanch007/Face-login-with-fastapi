@@ -1,3 +1,4 @@
 venv-commands-and-issuse.txt
 __pycache__
 venv
+.env
