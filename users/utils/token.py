@@ -2,7 +2,7 @@ import jwt, datetime
 from config.settings import SECRET_KEY
 
 
-def get_access_token(user):
+async def get_access_token(user):
     payload = {
             'id': str(user['_id']),
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=90),
@@ -10,5 +10,5 @@ def get_access_token(user):
         }
     return jwt.encode(payload, SECRET_KEY)
 
-def decode_access_token(token):
+async def decode_access_token(token):
     return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])

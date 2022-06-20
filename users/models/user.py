@@ -5,6 +5,7 @@ class User(BaseModel):
     name: str
     email: EmailStr
     password: str
+    meta: dict = {}
 
     @validator('name')
     def name_is_required(cls, v):

@@ -3,7 +3,7 @@ from users.models.user import User
 from users.utils.password import get_password_hash, verify_password
 from users.utils.user import find_user, add_user
 from users.utils.token import get_access_token, decode_access_token
-
+from users.models.request_format import LoginFormat
 
 router = APIRouter()
 
@@ -23,14 +23,13 @@ async def register(user: User, response: Response):
 
 
 @router.post("/login")
-async def login(request: Request, response: Response):
-    data = await request.json()
-    user = await find_user(data)
+async def login(request: LoginFormat, response: Response):
+    user = await find_user(request)
     if user:
-        plain_password = data['password']
+        plain_password = request.password
         hashed_password = user['password']
         if verify_password(plain_password, hashed_password):
-            access_token = get_access_token(user)
+            access_token = await get_access_token(user)
         else:
             response.status_code = status.HTTP_401_UNAUTHORIZED
             return {
@@ -48,9 +47,10 @@ async def login(request: Request, response: Response):
 @router.get("/user_details")
 async def user_details(request: Request):
     access_token = request.headers.get('authorization')
-    decoded_user_token = decode_access_token(access_token.split()[1])
+    decoded_user_token = await decode_access_token(access_token.split()[1])
     user_data = await find_user(decoded_user_token)
     return {
         "name": user_data['name'],
-        "email": user_data['email']
+        "email": user_data['email'],
+        "meta": user_data['meta']
     }

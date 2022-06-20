@@ -17,7 +17,7 @@ async def authentication_dependency(request: Request):
             raise Unauthorized()
         else:
             try:
-                payload = decode_access_token(auth_token.split()[1])
+                payload = await decode_access_token(auth_token.split()[1])
                 print("Code for single login will be here")
             except:
                 raise Unauthorized()

@@ -1,7 +1,7 @@
 from config.database import conn
 from config.settings import DATABASE_NAME, USER_COLLECTION
 from bson import ObjectId
-
+import datetime
 
 db = conn[DATABASE_NAME][USER_COLLECTION]
 
@@ -17,4 +17,8 @@ async def find_user(user):
         return False
 
 async def add_user(user):
+    user = dict(user)
+    user['meta']= {
+        'createdOn': datetime.datetime.now()
+    }
     db.insert_one(dict(user))
