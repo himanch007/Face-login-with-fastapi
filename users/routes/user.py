@@ -39,7 +39,7 @@ async def login(request: LoginFormat, response: Response):
     }
 
 
-@router.get("/user_details", status_code=200)
+@router.get("/user-details", status_code=200)
 async def user_details(request: Request, auth_token: str = Header(alias="authorization")):
     access_token = request.headers.get('authorization')
     decoded_user_token = await decode_access_token(access_token.split()[1])
