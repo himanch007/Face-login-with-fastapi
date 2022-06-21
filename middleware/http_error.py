@@ -10,7 +10,7 @@ class HTTPError(Exception):
         self.message = message
         self.status_code = status_code
         self.response_json = {
-            'status_code': self.status_code,
+            # 'status_code': self.status_code,
             'message': self.message
         }
 
@@ -33,5 +33,17 @@ class Unauthorized(HTTPError):
         self, 
         message='Request is not authorized. Please log in', 
         status_code:int = 401
+    ):
+        super().__init__(message, status_code)
+
+
+class Conflict(HTTPError):
+    '''
+    Exception for error 409
+    '''
+    def __init__(
+        self, 
+        message='User already exists', 
+        status_code:int = 409
     ):
         super().__init__(message, status_code)

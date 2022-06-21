@@ -1,12 +1,16 @@
 from fastapi import Depends, FastAPI
 import uvicorn
 from middleware.exception_middleware import catch_exceptions_middleware
-from middleware.http_error import Unauthorized, http_error_handler
+from middleware.http_error import Conflict, Unauthorized, http_error_handler
 from users.routes import user
 from dependencies.authentication import authentication_dependency
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-app = FastAPI(docs_url='/docs')
+app = FastAPI(docs_url=os.getenv('DOCS_URL'))
 
 @app.get("/")
 def index():
@@ -20,6 +24,7 @@ if __name__ == "__main__":
 
 # error handlers
 app.add_exception_handler(Unauthorized, http_error_handler)
+app.add_exception_handler(Conflict, http_error_handler)
 
 
 # middleware
