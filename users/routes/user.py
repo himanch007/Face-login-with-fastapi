@@ -32,6 +32,7 @@ async def login(request: LoginFormat, response: Response):
 
     if verify_password(plain_password, hashed_password):
         access_token = await get_access_token(user)
+        # code to store token in db for single login
     else:
         raise Unauthorized(message="Incorrect password")
     return {
