@@ -12,6 +12,3 @@ EXCEPTION_ROUTES = ['/users/register', '/users/login']
 
 # Database name
 DATABASE_NAME = 'Project_1'
-
-# Collections names
-USER_COLLECTION = 'User'

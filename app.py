@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 import uvicorn
 from middleware.exception_middleware import catch_exceptions_middleware
 from middleware.http_error import Conflict, Unauthorized, http_error_handler
-from users.routes import user
+from users.controllers import user
 from dependencies.authentication import authentication_dependency
 import os
 from dotenv import load_dotenv

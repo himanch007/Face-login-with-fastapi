@@ -1,6 +1,6 @@
 from middleware.http_error import Unauthorized
 from fastapi.requests import Request
-from users.routes.user import router as user_router
+from users.controllers.user import router as user_router
 from config.settings import EXCEPTION_ROUTES
 from users.utils.token import decode_access_token
 
