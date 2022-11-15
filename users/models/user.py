@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, validator
+from users.models.managers.user import UserManager
 
 
 class User(BaseModel):
@@ -21,3 +22,5 @@ class User(BaseModel):
 
     class Config:
         fields = {'password': {'exclude': True}}
+        name = 'User'
+        objects = UserManager()

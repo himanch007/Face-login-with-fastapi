@@ -1,14 +1,14 @@
 from config.database import conn
 from bson import ObjectId
 import datetime
-from pydantic import BaseConfig
 
 db = conn['User']
-BaseConfig.arbitrary_types_allowed = True
 
 
 class UserManager:
-    async def find_user(user):
+    def __init__(self):
+        pass
+    async def find_user(self, user):
         user = dict(user)
         if 'email' in user:
             user_data = db.find_one({"email":user['email']})
@@ -19,7 +19,7 @@ class UserManager:
         
         return False
 
-    async def add_user(user):
+    async def add_user(self, user):
         user = dict(user)
         user['meta']= {
             'createdOn': datetime.datetime.now()
