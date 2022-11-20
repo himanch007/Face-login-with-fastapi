@@ -1,27 +1,23 @@
 from config.database import conn
 from bson import ObjectId
 import datetime
-
+from pydantic import validate_arguments
 db = conn['User']
 
 
 class UserManager:
-    def __init__(self):
-        pass
-    async def find_user(self, user):
-        user = dict(user)
-        if 'email' in user:
-            user_data = db.find_one({"email":user['email']})
-        if 'id' in user:
-            user_data = db.find_one({"_id":ObjectId(user['id'])})
-        if user_data:
-            return user_data
-        
-        return False
+    @validate_arguments
+    async def find_user(self, email: str = None, user_id: str = None):
+        user_data = {}
+        if email:
+            user_data = db.find_one({"email": email})
+        if user_id:
+            user_data = db.find_one({"_id":ObjectId(user_id)})
+        return user_data
 
-    async def add_user(self, user):
-        user = dict(user)
-        user['meta']= {
+    @validate_arguments
+    async def add_user(self, user: dict):
+        user['metadata']= {
             'createdOn': datetime.datetime.now()
         }
         db.insert_one(dict(user))

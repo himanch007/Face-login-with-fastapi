@@ -6,7 +6,7 @@ class User(BaseModel):
     name: str
     email: EmailStr
     password: str
-    meta: dict = {}
+    metadata: dict = {}
 
     @validator('name')
     def name_is_required(cls, v):
@@ -21,6 +21,5 @@ class User(BaseModel):
         return v
 
     class Config:
-        fields = {'password': {'exclude': True}}
         name = 'User'
         objects = UserManager()

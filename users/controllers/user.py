@@ -9,24 +9,27 @@ router = APIRouter()
 
 
 @router.post("/register", status_code=201)
-async def register(user: User):
-    user_data = await User.Config.objects.find_user(user)
-
+async def register(request_body: User):
+    request_body = request_body.dict()
+    user_data = await User.Config.objects.find_user(email=request_body['email'])
+    
     if user_data:
         raise Conflict()
 
-    user.password = await get_password_hash(user.password)
-    await User.Config.objects.add_user(user)
-    return user
+    request_body['password'] = await get_password_hash(request_body['password'])
+    await User.Config.objects.add_user(request_body)
+    request_body.pop('password')
+    return request_body
 
 
 @router.post("/login", status_code=200)
-async def login(request: LoginRequestFormat):
-    user = await User.Config.objects.find_user(request)
+async def login(request_body: LoginRequestFormat):
+    request_body = request_body.dict()
+    user = await User.Config.objects.find_user(email=request_body['email'])
     if user == False:
         raise Unauthorized(message="User does not exist")
     
-    plain_password = request.password
+    plain_password = request_body['password']
     hashed_password = user['password']
 
     if await verify_password(plain_password, hashed_password):
@@ -41,11 +44,8 @@ async def login(request: LoginRequestFormat):
 
 @router.get("/user-details", status_code=200)
 async def user_details(request: Request, auth_token: str = Header(alias="authorization")):
-    access_token = request.headers.get('authorization')
-    decoded_user_token = await decode_access_token(access_token.split()[1])
-    user_data = await User.Config.objects.find_user(decoded_user_token)
-    return {
-        "name": user_data['name'],
-        "email": user_data['email'],
-        "meta": user_data['meta']
-    }
+    decoded_user_token = await decode_access_token(auth_token.split()[1])
+    user_data = await User.Config.objects.find_user(user_id=decoded_user_token['id'])
+    user_data.pop('_id')
+    user_data.pop('password')
+    return user_data
