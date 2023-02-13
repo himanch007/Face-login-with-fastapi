@@ -1,7 +1,8 @@
-from config.database import conn
+from core.database import conn
 from bson import ObjectId
 import datetime
 from pydantic import validate_arguments
+
 db = conn['User']
 
 
@@ -13,6 +14,7 @@ class UserManager:
             user_data = db.find_one({"email": email})
         if user_id:
             user_data = db.find_one({"_id":ObjectId(user_id)})
+
         return user_data
 
     @validate_arguments
@@ -20,4 +22,5 @@ class UserManager:
         user['metadata']= {
             'createdOn': datetime.datetime.now()
         }
-        db.insert_one(dict(user))
+
+        db.insert_one(user)

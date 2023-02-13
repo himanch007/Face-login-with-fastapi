@@ -1,5 +1,5 @@
 import jwt, datetime
-from config.settings import SECRET_KEY
+from core.settings import SECRET_KEY
 
 
 async def get_access_token(user):
