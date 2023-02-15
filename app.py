@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
 import uvicorn
 from middleware.exception_middleware import catch_exceptions_middleware
-from middleware.http_error import Conflict, Unauthorized, http_error_handler
+from middleware.http_error import Conflict, Unauthorized, Unprocessable, http_error_handler
 from core.dependencies.authentication import authentication_dependency
 from core.routes import api_router as authenticated_router
 from unauth_routes import api_router as unauthenticated_router
@@ -26,6 +26,7 @@ if __name__ == "__main__":
 # error handlers
 app.add_exception_handler(Unauthorized, http_error_handler)
 app.add_exception_handler(Conflict, http_error_handler)
+app.add_exception_handler(Unprocessable, http_error_handler)
 
 
 # middleware

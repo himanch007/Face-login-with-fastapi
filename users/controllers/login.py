@@ -3,16 +3,17 @@ from middleware.http_error import Unauthorized
 from users.models.user import User
 from users.utils.password import verify_password
 from users.utils.token import get_access_token
-from users.validators.user import LoginRequestFormat
+from users.validators.login import LoginRequestFormat
 
 router = APIRouter()
 
 
 @router.post("", status_code=200)
 async def login(request_body: LoginRequestFormat):
+
     request_data = request_body.dict()
-    user = await User.Config.objects.find_user(email=request_data['email'])
-    if user == False:
+    user = await User.Model.objects.find_user(email=request_data['email'])
+    if not user:
         raise Unauthorized(message="User does not exist")
     
     plain_password = request_data['password']

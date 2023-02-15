@@ -47,3 +47,15 @@ class Conflict(HTTPError):
         status_code:int = 409
     ):
         super().__init__(message, status_code)
+
+
+class Unprocessable(HTTPError):
+    '''
+    Exception for error 422
+    '''
+    def __init__(
+        self, 
+        message='Request cannot be processed', 
+        status_code:int = 422
+    ):
+        super().__init__(message, status_code)

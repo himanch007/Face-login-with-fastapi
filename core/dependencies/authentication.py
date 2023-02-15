@@ -16,7 +16,8 @@ async def authentication_dependency(request: Request):
         try:
             payload = await decode_access_token(auth_token.split()[1])
             print("Code for single login will be here")
-            user_data = await User.Config.objects.find_user(user_id=payload['id'])
+            user_data = await User.Model.objects.find_user(user_id=payload['id'])
+            user_data.pop('password')
             setattr(request, 'user_data', user_data)
         except:
             raise Unauthorized()
