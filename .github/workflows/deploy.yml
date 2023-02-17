@@ -16,6 +16,7 @@ jobs:
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          dontuseforce: 1
       - name: Build and push Docker images
         run: |
           docker-compose build
