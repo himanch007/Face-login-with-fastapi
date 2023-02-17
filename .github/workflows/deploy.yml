@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Verify Heroku CLI
+        run: heroku version
       - name: Log in to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
