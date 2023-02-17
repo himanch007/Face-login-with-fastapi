@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-app = FastAPI(docs_url=os.getenv('DOCS_URL'))
+app = FastAPI(docs_url=os.environ.get('DOCS_URL'))
 
 
 @app.get("/")

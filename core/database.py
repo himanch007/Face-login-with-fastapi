@@ -5,12 +5,12 @@ from core.settings import DATABASE_NAME
 
 load_dotenv()
 
-mongo_host = os.getenv('MONGO_HOST')
-mongo_port = os.getenv('MONGO_PORT')
-mongo_username = os.getenv('MONGO_USERNAME')
-mongo_password = os.getenv('MONGO_PASSWORD')
-mongo_cluster = os.getenv('MONGO_CLUSTER')
-mongo_cluster_db = os.getenv('MONGO_CLUSTER_DB')
+mongo_host = os.environ.get('MONGO_HOST')
+mongo_port = os.environ.get('MONGO_PORT')
+mongo_username = os.environ.get('MONGO_USERNAME')
+mongo_password = os.environ.get('MONGO_PASSWORD')
+mongo_cluster = os.environ.get('MONGO_CLUSTER')
+mongo_cluster_db = os.environ.get('MONGO_CLUSTER_DB')
 
 if mongo_host and mongo_port:
     db_connection = mongo_host + ':' + mongo_port
