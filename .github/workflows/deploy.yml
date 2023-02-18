@@ -1,33 +1,32 @@
-name: Deploy to Heroku
+name: CI/CD pipeline
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Login to Heroku
-        uses: heroku/actions/setup-heroku@v1
-        with:
-          email: ${{ secrets.HEROKU_EMAIL }}
-          api_key: ${{ secrets.HEROKU_API_KEY }}
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: false
+        tags: my-fastapi-app:latest
 
-      - name: Build and push Docker image
-        env:
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker build -t registry.heroku.com/my-fastapi-app/web .
-          docker login -u _ -p ${{ secrets.HEROKU_API_KEY }} registry.heroku.com
-          docker push registry.heroku.com/my-fastapi-app/web
+    - name: Run Docker Compose
+      run: docker-compose up -d
 
-      - name: Release to Heroku
-        uses: heroku/actions/deploy-container@v1
-        with:
-          app: ${{ secrets.HEROKU_APP_NAME }}
-          container: registry.heroku.com/my-fastapi-app/web
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        buildpacks: heroku/python
+        container: ${{ secrets.HEROKU_APP_NAME }}
