@@ -10,14 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: heroku/actions/setup-heroku@v1
+      - uses: actions/checkout@v2
 
       - name: Login to Heroku
-        uses: actions/heroku@v1
+        uses: heroku/actions/setup-heroku@v1
         with:
           email: ${{ secrets.HEROKU_EMAIL }}
           api_key: ${{ secrets.HEROKU_API_KEY }}
-          app: ${{ secrets.HEROKU_APP_NAME }}
 
       - name: Build and push Docker image
         env:
@@ -28,9 +27,7 @@ jobs:
           docker push registry.heroku.com/my-fastapi-app/web
 
       - name: Release to Heroku
-        uses: actions/heroku@v1
+        uses: heroku/actions/deploy-container@v1
         with:
-          email: ${{ secrets.HEROKU_EMAIL }}
-          api_key: ${{ secrets.HEROKU_API_KEY }}
           app: ${{ secrets.HEROKU_APP_NAME }}
-          command: 'docker-compose up -d'
+          container: registry.heroku.com/my-fastapi-app/web
