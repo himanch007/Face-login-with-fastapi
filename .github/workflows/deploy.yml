@@ -1,25 +1,36 @@
 name: Deploy to Heroku
+
 on:
   push:
     branches:
       - master
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Verify Heroku CLI
-        run: heroku version
-      - name: Log in to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - uses: actions/checkout@v2
+
+      - name: Login to Heroku
+        uses: actions/heroku@v1
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          dontuseforce: 1
-      - name: Build and push Docker images
+          email: ${{ secrets.HEROKU_EMAIL }}
+          api_key: ${{ secrets.HEROKU_API_KEY }}
+          app: ${{ secrets.HEROKU_APP_NAME }}
+
+      - name: Build and push Docker image
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          docker-compose build
-          docker-compose push
-      - name: Deploy to Heroku
-        run: heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+          docker build -t registry.heroku.com/my-fastapi-app/web .
+          docker login -u _ -p ${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+          docker push registry.heroku.com/my-fastapi-app/web
+
+      - name: Release to Heroku
+        uses: actions/heroku@v1
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }}
+          api_key: ${{ secrets.HEROKU_API_KEY }}
+          app: ${{ secrets.HEROKU_APP_NAME }}
+          command: 'docker-compose up -d'
