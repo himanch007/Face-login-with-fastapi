@@ -1,32 +1,28 @@
-name: CI/CD pipeline
+# name: Render Deploy
 
-on:
-  push:
-    branches: [ master ]
+# on:
+#   push:
+#     branches: [ master ]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
 
-    # - name: Build Docker image
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     context: .
-    #     push: false
-    #     tags: my-fastapi-app:latest
+#     - name: Login to Render
+#       run: |
+#         curl https://render.com/api/auth/me \
+#           -H "Authorization: Basic ${{ secrets.RENDER_API_KEY }}" \
+#           -H "Content-Type: application/json"
 
-    - name: Run Docker Compose
-      run: docker-compose up -d
+#     - name: Build and push Docker Compose image
+#       run: |
+#         docker-compose build
+#         docker-compose push
 
-    - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-        heroku_email: ${{ secrets.HEROKU_EMAIL }}
-        buildpacks: heroku/python
-        container: ${{ secrets.HEROKU_APP_NAME }}
+#     - name: Deploy to Render
+#       run: |
+#         render service update <service-name> --docker-image <image-name> --autodeploy

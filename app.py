@@ -16,7 +16,7 @@ app = FastAPI(docs_url=os.environ.get('DOCS_URL'))
 
 @app.get("/")
 async def index():
-    return {"name": "Backend"}
+    return {"name": "Backend new"}
 
 
 if __name__ == "__main__":
